@@ -27,7 +27,7 @@ const SignalNode = ({ data }) => (
     id="top"
     type="source"
     position={Position.Top}
-    style={{ background: "#555", width: "10px", height: "10px" }}
+    style={{ background: "#555", width: "10px", height: "10px", zIndex: "1" }}
     />
     <Handle
     id="top"
@@ -45,7 +45,7 @@ const SignalNode = ({ data }) => (
     id="bottom"
     type="source"
     position={Position.Bottom}
-    style={{ background: "#555", width: "10px", height: "10px" }}
+    style={{ background: "#555", width: "10px", height: "10px", zIndex: "1" }}
     />
     <Handle
     id="bottom"
