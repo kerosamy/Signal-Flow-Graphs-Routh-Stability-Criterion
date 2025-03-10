@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState , useEffect } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -52,7 +52,7 @@ export default function App() {
       id: `node_${nextId}`,
       type: 'signal',
       position,
-      data: { label: `S${nextId}` },
+      data: { label:`S${nextId}` },
     };
 
     setNodes((nds) => [...nds, newNode]);
@@ -64,24 +64,38 @@ export default function App() {
 
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
+    
 
   };
 
   const onConnect = (params) => {
-      
-    setPendingConnection(params);
+    
+    const { sourceHandle, targetHandle } = params;
+  
+    
+    if ((sourceHandle?.includes("top") && targetHandle?.includes("bottom")) || 
+    (sourceHandle?.includes("bottom") && targetHandle?.includes("top")) || 
+    (sourceHandle?.includes("right") && targetHandle?.includes("bottom")) ||
+    (sourceHandle?.includes("right") && targetHandle?.includes("top"))
+    ) {
+      console.log("Invalid connection: Top source cannot connect to Bottom source.");
+      return; 
+    }
+  
+    setPendingConnection(params);  // take herre the params of the edge from react flow and store in pendingConnection
     setShowGainMenu(true);
     
   };
 
   const applyGain = () => {
     if (pendingConnection) {
-      // Detect connection type for proper edge styling
+      
+      //extract from the pendingConnection the params to be added in the newEdge information
       const { source, target, sourceHandle, targetHandle } = pendingConnection;
       
       const newEdge = {
         ...pendingConnection,
-        id: `e-${source}-${target}-${sourceHandle}-${targetHandle}`,
+        id:` e-${source}-${target}-${sourceHandle}-${targetHandle}`,
         label: gainValue,
         type: 'gainEdge',
         data: {
@@ -94,6 +108,7 @@ export default function App() {
       setPendingConnection(null);
       setGainValue('K');
       setIsNegative(false);
+      console.log(edges);
     }
   };
 
@@ -108,6 +123,11 @@ export default function App() {
     event.dataTransfer.setData('application/reactflow', 'signal');
     event.dataTransfer.effectAllowed = 'move';
   };
+
+  useEffect(() => {
+    // console.log(edges);
+    // console.log(nodes);
+  }, [edges,nodes]);
 
   return (
     <div className="app">
