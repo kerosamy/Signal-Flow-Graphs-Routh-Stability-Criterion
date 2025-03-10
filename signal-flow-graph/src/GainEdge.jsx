@@ -10,6 +10,7 @@ const GainEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targ
     
     let controlX = midX;
     let controlY = midY;
+    let isReversed = sourceX > targetX;
     
 
     if (sourcePosition === "right" && targetPosition === "left") {
@@ -54,7 +55,8 @@ const GainEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targ
             strokeWidth: "5px",
             strokeLinejoin: "round",
             strokeLinecap: "round",
-            paintOrder: "stroke"
+            paintOrder: "stroke",
+            transform: isReversed ? "rotate(180deg)" : "none", transformBox: "fill-box", transformOrigin: "center"
             }}
         >
             <textPath
