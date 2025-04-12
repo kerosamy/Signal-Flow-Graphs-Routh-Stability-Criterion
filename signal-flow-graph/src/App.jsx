@@ -13,6 +13,11 @@ import '@xyflow/react/dist/style.css';
 import './App.css';
 import  GainEdge  from './GainEdge';
 import  SignalNode  from './SignalNode';
+//////////////////////////////
+import { useState } from 'react'
+import RouthCriterion from './Pages/Routh'; // adjust the path based on the file location
+
+
 
 
 export default function App() {
@@ -130,6 +135,7 @@ export default function App() {
   }, [edges,nodes]);
 
   return (
+///////////////////
     <div className="app">
       <header>
         <h1>Signal Flow Graph Analyzer</h1>
@@ -202,3 +208,12 @@ export default function App() {
     </div>
   );
 }
+/////////////////////////////////////
+    <>
+    <RouthCriterion />
+    </>
+  )
+}
+
+export default App
+//////////
