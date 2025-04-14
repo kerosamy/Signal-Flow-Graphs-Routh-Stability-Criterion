@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import RouthCriterion from './Pages/Routh'; // adjust the path based on the file location
-
+import RouthCriterion from './Pages/Routh/Routh'
+import SignalFlowGraph from './Pages/SignalFlowGraph/SignalFlowGraph'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-    <RouthCriterion />
+    <SignalFlowGraph></SignalFlowGraph>
     </>
   )
 }
