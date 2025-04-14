@@ -1,0 +1,288 @@
+.signalflowgraph {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.signalflowgraph header {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.signalflowgraph header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  color: #333;
+}
+
+.signalflowgraph main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.signalflowgraph .graph-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.signalflowgraph .flow-area {
+  flex: 1;
+  height: 100%;
+}
+
+.signalflowgraph .sidebar {
+  width: 180px;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e9ecef;
+}
+
+.signalflowgraph .sidebar h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.signalflowgraph .dnd-item {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  background-color: white;
+  cursor: grab;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.signalflowgraph .dnd-item:hover {
+  background-color: #f0f0f0;
+  border-color: #aaa;
+}
+
+.signalflowgraph .signal-node {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #ecf0f1;
+  border: 1px solid #bdc3c7;
+  text-align: center;
+  width: 120px;
+}
+
+.signalflowgraph .draggable-signal-button {
+  padding: 8px 12px;
+  background: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: grab;
+  margin-bottom: 8px;
+}
+
+.signalflowgraph .analyze-btn {
+  padding: 8px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.signalflowgraph .react-flow__controls {
+  font-size: 500px !important; /* Increase as needed */
+}
+.signalflowgraph button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.signalflowgraph button:hover {
+  background-color: #2980b9;
+}
+
+.signalflowgraph .gain-menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.signalflowgraph .gain-menu h4 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.signalflowgraph .gain-menu input {
+  width: 100%;
+  padding: 4px;
+  margin: 8px 0;
+}
+
+.signalflowgraph .gain-menu-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.signalflowgraph .apply-btn {
+  padding: 6px 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.signalflowgraph .cancel-btn {
+  padding: 6px 12px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+/* Modal Background Overlay */
+.analyze-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  width: 400px;
+  max-width: 100%;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 1;
+}
+
+.analyze-modal h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.dropdowns {
+  margin-bottom: 20px;
+}
+
+.dropdowns label {
+  font-size: 16px;
+  color: #555;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.dropdowns select {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  outline: none;
+  transition: border 0.3s ease, background-color 0.3s ease;
+}
+
+.dropdowns select:focus {
+  border: 1px solid #4a90e2;
+  background-color: #eaf4ff;
+}
+
+/* Modal Buttons */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.modal-buttons button {
+  background-color: #4a90e2;
+  color: white;
+  padding: 12px 18px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 48%;
+}
+
+.modal-buttons button:hover {
+  background-color: #2a75bb;
+  transform: translateY(-3px);
+}
+
+.modal-buttons button:active {
+  transform: translateY(1px);
+}
+
+.modal-buttons .cancel-btn {
+  background-color: #e94e77;
+}
+
+.modal-buttons .cancel-btn:hover {
+  background-color: #e6375f;
+}
+
+.modal-buttons .cancel-btn:active {
+  transform: translateY(1px);
+}
+
+/* Modal Close Effect (if modal is dismissed) */
+.analyze-modal.fade-out {
+  opacity: 0;
+  transform: translate(-50%, -40%);
+}
+/* Add this CSS to your signalflowgraph.css or a new file for the modal */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}

@@ -25,7 +25,9 @@ const GainEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targ
     edgePath =` M ${sourceX} ${sourceY} Q ${controlX} ${controlY} ${targetX} ${targetY}`;
     }
 
-    const displayLabel = isNegative ? `-${label}` : label;
+    
+    const displayLabel =label;
+   
     
     // create a unique ID for this path to reference in textPath
     const pathId = `path-${id}`;
