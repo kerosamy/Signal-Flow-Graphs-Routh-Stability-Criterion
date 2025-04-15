@@ -1,4 +1,4 @@
-const GainEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, label }) => {
+const GainEdge = ({ id, source , target, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, label }) => {
     
     let edgePath;
     const midX = (sourceX + targetX) / 2;
@@ -22,10 +22,14 @@ const GainEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targ
     else if (sourcePosition === "bottom" && targetPosition === "bottom") {
     controlY = Math.max(sourceY, targetY) + arcFactor; // curve downwards
     edgePath =` M ${sourceX} ${sourceY} Q ${controlX} ${controlY} ${targetX} ${targetY}`;
-    }else if (sourcePosition === "top" && targetPosition === "left") {
+    }else if (sourcePosition === "top" && targetPosition === "left"  && source === target) {
         const controlX = sourceX - arcFactor * 4; // Control point to the left of the source
         const controlY = sourceY - arcFactor;     // Control point above the source
         edgePath = `M ${sourceX} ${sourceY} C ${controlX} ${controlY} ${controlX} ${targetY} ${targetX} ${targetY}`;
+    }else if (sourcePosition === "top" && targetPosition === "left"   || 
+        sourcePosition === "right" && targetPosition === "top" 
+    ) {
+        edgePath = `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`; // st. line
     }
 
     

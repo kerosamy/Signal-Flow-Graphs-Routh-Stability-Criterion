@@ -102,7 +102,6 @@ function SignalFlowGraph() {
       (sourceHandle?.includes("top") && targetHandle?.includes("bottom")) || 
       (sourceHandle?.includes("bottom") && targetHandle?.includes("top")) || 
       (sourceHandle?.includes("right") && targetHandle?.includes("bottom")) ||
-      (sourceHandle?.includes("right") && targetHandle?.includes("top")) ||
       (sourceHandle?.includes("bottom") && targetHandle?.includes("left")) ||
       (sourceHandle?.includes("left") && targetHandle?.includes("top")) ||
       (sourceHandle?.includes("left") && targetHandle?.includes("bottom")) 
