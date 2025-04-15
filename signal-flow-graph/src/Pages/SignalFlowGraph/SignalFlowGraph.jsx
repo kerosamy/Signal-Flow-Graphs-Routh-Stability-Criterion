@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import ResultModal from './ResultModal';
-import GainMenu from './GainMenu'; // Import GainMenu component
-import AnalyzeModal from './AnalyzeModal'; // Import AnalyzeModal component
+import GainMenu from './GainMenu';
+import AnalyzeModal from './AnalyzeModal';
 import {
   ReactFlow,
   MiniMap,
@@ -46,6 +46,12 @@ function SignalFlowGraph() {
   const [sourceNode, setSourceNode] = useState('');
   const [destNode, setDestNode] = useState('');
 
+
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedEdge, setSelectedEdge] = useState(null);
+  const [showDeleteNodeModal, setShowDeleteNodeModal] = useState(false);
+  const [showDeleteEdgeModal, setShowDeleteEdgeModal] = useState(false);
+
   const onInit = (instance) => setReactFlowInstance(instance);
 
   const onDrop = (event) => {
@@ -75,13 +81,31 @@ function SignalFlowGraph() {
   };
 
   const onConnect = (params) => {
-    const { sourceHandle, targetHandle } = params;
+    const { source, target, sourceHandle, targetHandle } = params;
+
+    if (targetHandle?.includes("left") && sourceHandle?.includes("right")) {
+      const targetNumberMatch = target?.match(/^S(\d+)$/);
+      const sourceNumberMatch = source?.match(/^S(\d+)$/);
+
+      if (targetNumberMatch && sourceNumberMatch) {
+        const targetNumber = parseInt(targetNumberMatch[1], 10);
+        const sourceNumber = parseInt(sourceNumberMatch[1], 10);
+
+        if (targetNumber <= sourceNumber) {
+          console.log(`Invalid connection: When connecting from the right handle of S${sourceNumber} to the left handle of S${targetNumber}, target number must be less than source number.`);
+          return;
+        }
+      }
+    }
 
     if (
       (sourceHandle?.includes("top") && targetHandle?.includes("bottom")) || 
       (sourceHandle?.includes("bottom") && targetHandle?.includes("top")) || 
       (sourceHandle?.includes("right") && targetHandle?.includes("bottom")) ||
-      (sourceHandle?.includes("right") && targetHandle?.includes("top"))
+      (sourceHandle?.includes("right") && targetHandle?.includes("top")) ||
+      (sourceHandle?.includes("bottom") && targetHandle?.includes("left")) ||
+      (sourceHandle?.includes("left") && targetHandle?.includes("top")) ||
+      (sourceHandle?.includes("left") && targetHandle?.includes("bottom")) 
     ) {
       console.log("Invalid connection: Top source cannot connect to Bottom source.");
       return; 
@@ -89,6 +113,73 @@ function SignalFlowGraph() {
 
     setPendingConnection(params);
     setShowGainMenu(true);
+  };
+
+
+  const onNodeClick = (_, node) => {
+    setSelectedNode(node);
+  };
+
+  const onEdgeClick = (_, edge) => {
+    setSelectedEdge(edge);
+  };
+
+  const deleteNode = () => {
+    if (selectedNode) {
+      const nodeId = selectedNode.id;
+
+      setEdges(edges => edges.filter(edge => 
+        edge.source !== nodeId && edge.target !== nodeId
+      ));
+
+      setNodes(nodes => {
+        const remainingNodes = nodes.filter(node => node.id !== nodeId);
+
+        remainingNodes.sort((a, b) => {
+          const aNum = parseInt(a.id.replace('S', ''), 10);
+          const bNum = parseInt(b.id.replace('S', ''), 10);
+          return aNum - bNum;
+        });
+
+        return remainingNodes.map((node, index) => {
+          const newId = `S${index + 1}`;
+          
+
+          setEdges(edges => edges.map(edge => {
+            if (edge.source === node.id) {
+              return { ...edge, source: newId };
+            }
+            if (edge.target === node.id) {
+              return { ...edge, target: newId };
+            }
+            return edge;
+          }));
+
+          return {
+            ...node,
+            id: newId,
+            data: { ...node.data, label: newId }
+          };
+        });
+      });
+      
+      setNextId(nodes.length);
+      
+      setSelectedNode(null);
+      setShowDeleteNodeModal(false);
+    }
+  };
+
+
+  const deleteEdge = () => {
+    if (selectedEdge) {
+      const edgeId = selectedEdge.id;
+      setEdges(edges => edges.filter(edge => edge.id !== edgeId));
+      
+
+      setSelectedEdge(null);
+      setShowDeleteEdgeModal(false);
+    }
   };
 
   const applyGain = () => {
@@ -151,15 +242,17 @@ function SignalFlowGraph() {
     } else {
       console.error('Error:', response.status);
     }
-  
   };
 
   const cancelAnalysis = () => {
     setShowAnalyzeModal(false); // Close the modal without submitting
   };
+
   const closeResultModal = () => {
     setShowResultModal(false); // Close the result modal
   };
+
+  useEffect(() => {console.log(edges);console.log(nodes)}, [nodes, edges]);
 
   return (
     <div className="signalflowgraph">
@@ -178,6 +271,8 @@ function SignalFlowGraph() {
               onInit={onInit}
               onDrop={onDrop}
               onDragOver={onDragOver}
+              onNodeClick={onNodeClick}
+              onEdgeClick={onEdgeClick}
               nodeTypes={nodeTypes}
               edgeTypes={edgeTypes}
               fitView
@@ -185,17 +280,50 @@ function SignalFlowGraph() {
               snapGrid={[15, 15]}
             >
               <div style={{ fontSize: '500px' }}>
-                <Controls />
+
               </div>
               <MiniMap />
               <Background variant="dots" gap={12} size={1} />
-              <Panel position="top-left">
+              <Panel position="top-left"
+                style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  gap: '10px' 
+                }}
+              >
                 <div className="draggable-signal-button" draggable onDragStart={onDragStart}>
                   + Add Signal
                 </div>
                 <button className="analyze-btn" onClick={handleAnalyze}>
                   Analyze Graph
                 </button>
+
+                <button 
+                  className="delete-node-btn"
+                  onClick={() => {
+                    if (selectedNode) {
+                      setShowDeleteNodeModal(true);
+                    } else {
+                      alert('Please select a node to delete');
+                    }
+                  }}
+                >
+                  Delete Node
+                </button>
+                
+                <button 
+                  className="delete-edge-btn"
+                  onClick={() => {
+                    if (selectedEdge) {
+                      setShowDeleteEdgeModal(true);
+                    } else {
+                      alert('Please select an edge to delete');
+                    }
+                  }}
+                >
+                  Delete Edge
+                </button>
+
               </Panel>
             </ReactFlow>
 
@@ -209,6 +337,37 @@ function SignalFlowGraph() {
                 cancelConnection={cancelConnection}
               />
             )}
+            
+
+            {showDeleteNodeModal && (
+              <div className="modal-overlay">
+                <div className="modal-content">
+                  <h3>Delete Node</h3>
+                  <p>Are you sure you want to delete node {selectedNode?.id}?</p>
+                  <p>This will also delete all connected edges.</p>
+                  <div className="modal-buttons">
+                    <button onClick={deleteNode}>Delete</button>
+                    <button onClick={() => setShowDeleteNodeModal(false)}>Cancel</button>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+
+            {showDeleteEdgeModal && (
+              <div className="modal-overlay">
+                <div className="modal-content">
+                  <h3>Delete Edge</h3>
+                  <p>Are you sure you want to delete this edge?</p>
+                  <p>From: {selectedEdge?.source} to {selectedEdge?.target}</p>
+                  <div className="modal-buttons">
+                    <button onClick={deleteEdge}>Delete</button>
+                    <button onClick={() => setShowDeleteEdgeModal(false)}>Cancel</button>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {/* Modal for Analyze */}
             <AnalyzeModal
               showAnalyzeModal={showAnalyzeModal}
@@ -225,7 +384,6 @@ function SignalFlowGraph() {
               analysisResult={analysisResult}
               closeResultModal={closeResultModal}
             />
-
           </div>
         </div>
       </main>

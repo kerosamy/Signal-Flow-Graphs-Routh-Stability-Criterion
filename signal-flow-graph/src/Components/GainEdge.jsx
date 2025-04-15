@@ -1,5 +1,4 @@
-const GainEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, label, data }) => {
-    const isNegative = data?.isNegative || false;
+const GainEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, label }) => {
     
     let edgePath;
     const midX = (sourceX + targetX) / 2;
@@ -23,6 +22,10 @@ const GainEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targ
     else if (sourcePosition === "bottom" && targetPosition === "bottom") {
     controlY = Math.max(sourceY, targetY) + arcFactor; // curve downwards
     edgePath =` M ${sourceX} ${sourceY} Q ${controlX} ${controlY} ${targetX} ${targetY}`;
+    }else if (sourcePosition === "top" && targetPosition === "left") {
+        const controlX = sourceX - arcFactor * 4; // Control point to the left of the source
+        const controlY = sourceY - arcFactor;     // Control point above the source
+        edgePath = `M ${sourceX} ${sourceY} C ${controlX} ${controlY} ${controlX} ${targetY} ${targetX} ${targetY}`;
     }
 
     
