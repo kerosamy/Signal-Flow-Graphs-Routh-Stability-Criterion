@@ -13,12 +13,12 @@ function convertToFractionLatex(expr) {
 function ResultModal({ showResultModal, analysisResult, closeResultModal }) {
   if (!showResultModal) return null;
 
-  const { 
-    forward_paths = [], 
-    loops = [], 
-    transfer_function = {}, 
-    determinant = {}, 
-    forward_path_gains = [], 
+  const {
+    forward_paths = [],
+    loops = [],
+    transfer_function = {},
+    determinant = {},
+    forward_path_gains = [],
     loop_gains = [],
     path_determinants = []
   } = analysisResult.result;
@@ -29,7 +29,7 @@ function ResultModal({ showResultModal, analysisResult, closeResultModal }) {
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>Signal Flow Graph Analysis</h2>
-            
+
             {/* Transfer Function */}
             <div className="result-section">
               <h3>Transfer Function</h3>
@@ -48,7 +48,7 @@ function ResultModal({ showResultModal, analysisResult, closeResultModal }) {
                 </p>
               </div>
             </div>
-            
+
             {/* Determinant */}
             <div className="result-section">
               <h3>Determinant (Δ)</h3>
@@ -67,11 +67,11 @@ function ResultModal({ showResultModal, analysisResult, closeResultModal }) {
                 </p>
               </div>
             </div>
-            
+
             {/* Forward Paths */}
             <div className="result-section">
               <h3>Forward Paths</h3>
-              <div className="result-box">
+              <div className="result-box result-table-scrollable"> {/* Added class */}
                 <table className="result-table">
                   <thead>
                     <tr>
@@ -102,7 +102,7 @@ function ResultModal({ showResultModal, analysisResult, closeResultModal }) {
             {/* Loops */}
             <div className="result-section">
               <h3>Loops</h3>
-              <div className="result-box">
+              <div className="result-box result-table-scrollable"> {/* Added class */}
                 <table className="result-table">
                   <thead>
                     <tr>
@@ -145,7 +145,7 @@ function ResultModal({ showResultModal, analysisResult, closeResultModal }) {
               align-items: center;
               z-index: 1000;
             }
-            
+
             .modal-content {
               background: white;
               border-radius: 8px;
@@ -155,13 +155,13 @@ function ResultModal({ showResultModal, analysisResult, closeResultModal }) {
               max-height: 90vh;
               overflow-y: auto;
             }
-            
+
             h2 {
               text-align: center;
               margin-bottom: 20px;
               color: #333;
             }
-            
+
             h3 {
               margin-top: 15px;
               margin-bottom: 10px;
@@ -169,44 +169,46 @@ function ResultModal({ showResultModal, analysisResult, closeResultModal }) {
               border-bottom: 1px solid #eee;
               padding-bottom: 5px;
             }
-            
+
             .result-section {
               margin-bottom: 20px;
             }
-            
+
             .result-box {
               background-color: #f8f9fa;
               border: 1px solid #e9ecef;
               border-radius: 5px;
               padding: 15px;
+              overflow-y: auto; /* Enable vertical scrolling if content overflows */
+              max-height: 200px; /* Set a maximum height for the box */
             }
-            
+
             .result-table {
               width: 100%;
               border-collapse: collapse;
             }
-            
+
             .result-table th, .result-table td {
               border: 1px solid #ddd;
               padding: 8px;
               text-align: left;
             }
-            
+
             .result-table th {
               background-color: #f2f2f2;
               font-weight: bold;
             }
-            
+
             .result-table tr:nth-child(even) {
               background-color: #f9f9f9;
             }
-            
+
             .modal-footer {
               display: flex;
               justify-content: center;
               margin-top: 20px;
             }
-            
+
             .close-button {
               background-color: #4CAF50;
               border: none;
@@ -216,9 +218,13 @@ function ResultModal({ showResultModal, analysisResult, closeResultModal }) {
               cursor: pointer;
               border-radius: 4px;
             }
-            
+
             .close-button:hover {
               background-color: #45a049;
+            }
+
+            .result-table-scrollable {
+              max-height: none; /* Remove max-height from the table container */
             }
           `}</style>
         </div>
